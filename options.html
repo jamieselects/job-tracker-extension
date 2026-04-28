@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Job Tracker — Settings</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f8fafc;
+      color: #1a1a1a;
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    .card {
+      max-width: 520px;
+      margin: 0 auto;
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .card-header {
+      background: #2563eb;
+      padding: 20px 28px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .card-header h1 {
+      color: #fff;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .card-header p {
+      color: rgba(255,255,255,0.8);
+      font-size: 12.5px;
+      margin-top: 2px;
+    }
+
+    .card-body {
+      padding: 28px;
+    }
+
+    .section {
+      margin-bottom: 28px;
+    }
+
+    .section:last-of-type {
+      margin-bottom: 0;
+    }
+
+    .section-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #64748b;
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .field {
+      margin-bottom: 16px;
+    }
+
+    .field:last-child {
+      margin-bottom: 0;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 5px;
+    }
+
+    label .hint {
+      font-weight: 400;
+      color: #94a3b8;
+      font-size: 11.5px;
+      margin-left: 4px;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 7px;
+      font-size: 13.5px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      color: #1e293b;
+      background: #fafafa;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+      background: #fff;
+    }
+
+    .help-text {
+      font-size: 11.5px;
+      color: #64748b;
+      margin-top: 4px;
+      line-height: 1.5;
+    }
+
+    .help-text a {
+      color: #2563eb;
+      text-decoration: none;
+    }
+
+    .help-text a:hover {
+      text-decoration: underline;
+    }
+
+    .card-footer {
+      padding: 20px 28px;
+      background: #f8fafc;
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    #saveBtn {
+      padding: 9px 20px;
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    #saveBtn:hover {
+      background: #1d4ed8;
+    }
+
+    #statusMsg {
+      font-size: 13px;
+      color: #166534;
+      display: none;
+    }
+
+    #statusMsg.visible {
+      display: block;
+    }
+
+    #statusMsg.error {
+      color: #991b1b;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <h1>💼 Job Tracker Settings</h1>
+        <p>API keys are stored locally in your browser only.</p>
+      </div>
+    </div>
+
+    <div class="card-body">
+
+      <div class="section">
+        <div class="section-title">OpenAI</div>
+        <div class="field">
+          <label for="openaiKey">API Key <span class="hint">required</span></label>
+          <input type="password" id="openaiKey" placeholder="sk-..." autocomplete="off" />
+          <p class="help-text">
+            Get your key at <a href="https://platform.openai.com/api-keys" target="_blank">platform.openai.com/api-keys</a>.
+            Uses <code>gpt-4o-mini</code> — costs fractions of a cent per save.
+          </p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Airtable</div>
+        <div class="field">
+          <label for="airtableKey">API Key <span class="hint">required</span></label>
+          <input type="password" id="airtableKey" placeholder="pat..." autocomplete="off" />
+          <p class="help-text">
+            Create a personal access token at <a href="https://airtable.com/create/tokens" target="_blank">airtable.com/create/tokens</a>.
+            Needs <strong>data.records:write</strong> scope for your base.
+          </p>
+        </div>
+        <div class="field">
+          <label for="baseId">Base ID <span class="hint">pre-filled</span></label>
+          <input type="text" id="baseId" placeholder="appXXXXXXXXXXXXXX" autocomplete="off" />
+          <p class="help-text">Found in your Airtable URL: airtable.com/<strong>appXXX</strong>/...</p>
+        </div>
+        <div class="field">
+          <label for="tableId">Table ID <span class="hint">pre-filled</span></label>
+          <input type="text" id="tableId" placeholder="tblXXXXXXXXXXXXXX" autocomplete="off" />
+          <p class="help-text">Found in your Airtable URL: airtable.com/appXXX/<strong>tblXXX</strong>/...</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="card-footer">
+      <button id="saveBtn">Save Settings</button>
+      <span id="statusMsg"></span>
+    </div>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>

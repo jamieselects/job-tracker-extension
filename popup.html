@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Job Tracker</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      width: 300px;
+      background: #fff;
+      color: #1a1a1a;
+    }
+
+    .header {
+      background: #2563eb;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .header-icon {
+      width: 28px;
+      height: 28px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .header h1 {
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .header p {
+      color: rgba(255,255,255,0.75);
+      font-size: 11px;
+      margin-top: 1px;
+    }
+
+    .body {
+      padding: 20px;
+    }
+
+    /* Extracted fields preview */
+    .preview {
+      display: none;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin-bottom: 16px;
+    }
+
+    .preview.visible {
+      display: block;
+    }
+
+    .preview-row {
+      display: flex;
+      gap: 6px;
+      font-size: 12px;
+      line-height: 1.4;
+      margin-bottom: 4px;
+    }
+
+    .preview-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .preview-label {
+      color: #64748b;
+      font-weight: 500;
+      min-width: 58px;
+      flex-shrink: 0;
+    }
+
+    .preview-value {
+      color: #1e293b;
+      word-break: break-word;
+    }
+
+    /* Save button */
+    #saveBtn {
+      width: 100%;
+      padding: 11px;
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background 0.15s;
+    }
+
+    #saveBtn:hover:not(:disabled) {
+      background: #1d4ed8;
+    }
+
+    #saveBtn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .spinner {
+      display: none;
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(255,255,255,0.4);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Status message */
+    #status {
+      margin-top: 12px;
+      font-size: 12.5px;
+      line-height: 1.5;
+      border-radius: 6px;
+      padding: 0;
+      display: none;
+    }
+
+    #status.visible {
+      display: block;
+      padding: 10px 12px;
+    }
+
+    #status.success {
+      background: #f0fdf4;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+    }
+
+    #status.error {
+      background: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+
+    #status.info {
+      background: #eff6ff;
+      color: #1e40af;
+      border: 1px solid #bfdbfe;
+    }
+
+    #status a {
+      color: inherit;
+      font-weight: 600;
+      text-decoration: underline;
+    }
+
+    /* Footer */
+    .footer {
+      padding: 10px 20px 14px;
+      border-top: 1px solid #f1f5f9;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer a {
+      font-size: 11.5px;
+      color: #64748b;
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      color: #2563eb;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="header-icon">💼</div>
+    <div>
+      <h1>Job Tracker</h1>
+      <p>Save to Airtable with AI</p>
+    </div>
+  </div>
+
+  <div class="body">
+    <div class="preview" id="preview">
+      <div class="preview-row">
+        <span class="preview-label">Company</span>
+        <span class="preview-value" id="prev-company">—</span>
+      </div>
+      <div class="preview-row">
+        <span class="preview-label">Title</span>
+        <span class="preview-value" id="prev-title">—</span>
+      </div>
+      <div class="preview-row">
+        <span class="preview-label">Location</span>
+        <span class="preview-value" id="prev-location">—</span>
+      </div>
+      <div class="preview-row">
+        <span class="preview-label">Salary</span>
+        <span class="preview-value" id="prev-salary">—</span>
+      </div>
+    </div>
+
+    <button id="saveBtn">
+      <span class="spinner" id="spinner"></span>
+      <span id="btnText">Save This Job</span>
+    </button>
+
+    <div id="status"></div>
+  </div>
+
+  <div class="footer">
+    <a href="#" id="settingsLink">⚙ Settings</a>
+    <a href="https://airtable.com/appwY5sGbYJeVXAjc/tblLOrQdaqX0MpS0z" target="_blank">Open Tracker ↗</a>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
