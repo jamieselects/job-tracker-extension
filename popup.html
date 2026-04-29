@@ -13,35 +13,27 @@
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      width: 300px;
+      width: 320px;
       background: #fff;
       color: #1a1a1a;
     }
 
     .header {
       background: #2563eb;
-      padding: 16px 20px;
+      padding: 14px 18px;
       display: flex;
       align-items: center;
       gap: 10px;
     }
 
     .header-icon {
-      width: 28px;
-      height: 28px;
-      background: rgba(255,255,255,0.2);
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
+      font-size: 18px;
     }
 
     .header h1 {
       color: #fff;
-      font-size: 16px;
-      font-weight: 600;
-      letter-spacing: -0.01em;
+      font-size: 15px;
+      font-weight: 700;
     }
 
     .header p {
@@ -51,39 +43,35 @@
     }
 
     .body {
-      padding: 20px;
+      padding: 16px;
     }
 
-    /* Extracted fields preview */
+    /* ── Fields preview ── */
     .preview {
       display: none;
       background: #f8fafc;
       border: 1px solid #e2e8f0;
       border-radius: 8px;
-      padding: 12px 14px;
-      margin-bottom: 16px;
+      padding: 10px 12px;
+      margin-bottom: 12px;
     }
 
-    .preview.visible {
-      display: block;
-    }
+    .preview.visible { display: block; }
 
     .preview-row {
       display: flex;
       gap: 6px;
-      font-size: 12px;
+      font-size: 11.5px;
       line-height: 1.4;
-      margin-bottom: 4px;
+      margin-bottom: 3px;
     }
 
-    .preview-row:last-child {
-      margin-bottom: 0;
-    }
+    .preview-row:last-child { margin-bottom: 0; }
 
     .preview-label {
       color: #64748b;
-      font-weight: 500;
-      min-width: 58px;
+      font-weight: 600;
+      min-width: 54px;
       flex-shrink: 0;
     }
 
@@ -92,15 +80,93 @@
       word-break: break-word;
     }
 
-    /* Save button */
+    /* ── Shared section styles ── */
+    .ai-section {
+      display: none;
+      margin-bottom: 12px;
+    }
+
+    .ai-section.visible { display: block; }
+
+    .ai-section-header {
+      font-size: 10.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: #64748b;
+      margin-bottom: 6px;
+    }
+
+    /* ── Summary section ── */
+    .summary-box {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 11.5px;
+      line-height: 1.6;
+      color: #14532d;
+    }
+
+    /* ── Skills section ── */
+    .skills-box {
+      background: #fefce8;
+      border: 1px solid #fde68a;
+      border-radius: 8px;
+      padding: 10px 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+
+    .skill-tag {
+      background: #fef9c3;
+      border: 1px solid #fde047;
+      border-radius: 4px;
+      padding: 2px 7px;
+      font-size: 10.5px;
+      font-weight: 500;
+      color: #713f12;
+      white-space: nowrap;
+    }
+
+    /* ── Bullets section ── */
+    .bullets-box {
+      background: #f0f9ff;
+      border: 1px solid #bae6fd;
+      border-radius: 8px;
+      padding: 10px 12px;
+    }
+
+    .bullet-role-header {
+      font-size: 11px;
+      font-weight: 700;
+      color: #075985;
+      margin-top: 8px;
+      margin-bottom: 3px;
+    }
+
+    .bullet-role-header:first-child { margin-top: 0; }
+
+    .bullet-item {
+      font-size: 11.5px;
+      line-height: 1.5;
+      color: #0c4a6e;
+      margin-bottom: 4px;
+      padding-left: 2px;
+    }
+
+    .bullet-item:last-child { margin-bottom: 0; }
+
+    /* ── Save button ── */
     #saveBtn {
       width: 100%;
-      padding: 11px;
+      padding: 10px;
       background: #2563eb;
       color: #fff;
       border: none;
       border-radius: 8px;
-      font-size: 14px;
+      font-size: 13.5px;
       font-weight: 600;
       cursor: pointer;
       display: flex;
@@ -110,87 +176,57 @@
       transition: background 0.15s;
     }
 
-    #saveBtn:hover:not(:disabled) {
-      background: #1d4ed8;
-    }
-
-    #saveBtn:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
+    #saveBtn:hover:not(:disabled) { background: #1d4ed8; }
+    #saveBtn:disabled { opacity: 0.6; cursor: not-allowed; }
 
     .spinner {
       display: none;
-      width: 14px;
-      height: 14px;
+      width: 13px;
+      height: 13px;
       border: 2px solid rgba(255,255,255,0.4);
       border-top-color: #fff;
       border-radius: 50%;
       animation: spin 0.7s linear infinite;
+      flex-shrink: 0;
     }
 
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* Status message */
+    /* ── Status message ── */
     #status {
-      margin-top: 12px;
-      font-size: 12.5px;
+      margin-top: 10px;
+      font-size: 12px;
       line-height: 1.5;
       border-radius: 6px;
-      padding: 0;
       display: none;
     }
 
     #status.visible {
       display: block;
-      padding: 10px 12px;
+      padding: 9px 11px;
     }
 
-    #status.success {
-      background: #f0fdf4;
-      color: #166534;
-      border: 1px solid #bbf7d0;
-    }
+    #status.success { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+    #status.error   { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+    #status.info    { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
 
-    #status.error {
-      background: #fef2f2;
-      color: #991b1b;
-      border: 1px solid #fecaca;
-    }
+    #status a { color: inherit; font-weight: 600; text-decoration: underline; }
 
-    #status.info {
-      background: #eff6ff;
-      color: #1e40af;
-      border: 1px solid #bfdbfe;
-    }
-
-    #status a {
-      color: inherit;
-      font-weight: 600;
-      text-decoration: underline;
-    }
-
-    /* Footer */
+    /* ── Footer ── */
     .footer {
-      padding: 10px 20px 14px;
+      padding: 8px 16px 12px;
       border-top: 1px solid #f1f5f9;
       display: flex;
       justify-content: space-between;
-      align-items: center;
     }
 
     .footer a {
-      font-size: 11.5px;
+      font-size: 11px;
       color: #64748b;
       text-decoration: none;
     }
 
-    .footer a:hover {
-      color: #2563eb;
-      text-decoration: underline;
-    }
+    .footer a:hover { color: #2563eb; text-decoration: underline; }
   </style>
 </head>
 <body>
@@ -204,6 +240,8 @@
   </div>
 
   <div class="body">
+
+    <!-- Job fields preview -->
     <div class="preview" id="preview">
       <div class="preview-row">
         <span class="preview-label">Company</span>
@@ -221,6 +259,24 @@
         <span class="preview-label">Salary</span>
         <span class="preview-value" id="prev-salary">—</span>
       </div>
+    </div>
+
+    <!-- Tailored summary -->
+    <div class="ai-section" id="summarySection">
+      <div class="ai-section-header">✦ Tailored Summary</div>
+      <div class="summary-box" id="summaryText"></div>
+    </div>
+
+    <!-- Relevant skills -->
+    <div class="ai-section" id="skillsSection">
+      <div class="ai-section-header">✦ Relevant Skills</div>
+      <div class="skills-box" id="skillsTags"></div>
+    </div>
+
+    <!-- Tailored bullets -->
+    <div class="ai-section" id="bulletsSection">
+      <div class="ai-section-header">✦ Tailored Bullets</div>
+      <div class="bullets-box" id="bulletsList"></div>
     </div>
 
     <button id="saveBtn">
