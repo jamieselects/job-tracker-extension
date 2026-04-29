@@ -1,9 +1,15 @@
-const saveBtn    = document.getElementById('saveBtn');
-const spinner    = document.getElementById('spinner');
-const btnText    = document.getElementById('btnText');
-const statusEl   = document.getElementById('status');
-const previewEl  = document.getElementById('preview');
-const settingsLink = document.getElementById('settingsLink');
+const saveBtn        = document.getElementById('saveBtn');
+const spinner        = document.getElementById('spinner');
+const btnText        = document.getElementById('btnText');
+const statusEl       = document.getElementById('status');
+const previewEl      = document.getElementById('preview');
+const summarySection = document.getElementById('summarySection');
+const summaryText    = document.getElementById('summaryText');
+const skillsSection  = document.getElementById('skillsSection');
+const skillsTags     = document.getElementById('skillsTags');
+const bulletsSection = document.getElementById('bulletsSection');
+const bulletsList    = document.getElementById('bulletsList');
+const settingsLink   = document.getElementById('settingsLink');
 
 // ─── Settings link ────────────────────────────────────────────────────────────
 
@@ -12,11 +18,18 @@ settingsLink.addEventListener('click', (e) => {
   chrome.runtime.openOptionsPage();
 });
 
+// ─── Listen for live status updates from the background worker ────────────────
+
+chrome.runtime.onMessage.addListener((message) => {
+  if (message.action === 'statusUpdate') {
+    btnText.textContent = message.status;
+  }
+});
+
 // ─── On load: check config ────────────────────────────────────────────────────
 
 document.addEventListener('DOMContentLoaded', async () => {
   const config = await getConfig();
-
   if (!config.openaiKey || !config.airtableKey) {
     showStatus('info', '⚙ Please <a href="#" id="configLink">configure your API keys</a> before saving jobs.');
     document.getElementById('configLink')?.addEventListener('click', (e) => {
@@ -41,14 +54,14 @@ saveBtn.addEventListener('click', async () => {
       return;
     }
 
-    // Ask the content script for the page text
+    // Ask the content script for the page text + URL
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     let pageData;
 
     try {
       pageData = await chrome.tabs.sendMessage(tab.id, { action: 'getJobText' });
     } catch {
-      showStatus('error', 'Could not read this page. Make sure you\'re on a LinkedIn or Built In job posting, then refresh and try again.');
+      showStatus('error', "Couldn't read this page. Make sure you're on a LinkedIn or Built In job posting, then refresh and try again.");
       return;
     }
 
@@ -57,9 +70,9 @@ saveBtn.addEventListener('click', async () => {
       return;
     }
 
-    setLoading(true, 'Extracting with AI…');
+    setLoading(true, 'Extracting job details with AI…');
 
-    // Send to background to call OpenAI + Airtable
+    // Hand off to the background service worker (it will broadcast step updates)
     const result = await chrome.runtime.sendMessage({
       action: 'saveJob',
       data: {
@@ -77,8 +90,23 @@ saveBtn.addEventListener('click', async () => {
       return;
     }
 
-    // Show extracted fields preview
+    // Show extracted fields
     showPreview(result.extracted);
+
+    // Show tailored summary
+    if (result.summary) {
+      showSummary(result.summary);
+    }
+
+    // Show relevant skills
+    if (result.skills) {
+      showSkills(result.skills);
+    }
+
+    // Show tailored bullets
+    if (result.bullets) {
+      showBullets(result.bullets);
+    }
 
     showStatus('success', `✓ Saved! <a href="https://airtable.com/${config.baseId}/${config.tableId}" target="_blank">View in Airtable ↗</a>`);
     btnText.textContent = 'Saved ✓';
@@ -87,7 +115,7 @@ saveBtn.addEventListener('click', async () => {
   } catch (err) {
     showStatus('error', err.message || 'Unexpected error.');
   } finally {
-    setLoading(false);
+    spinner.style.display = 'none';
   }
 });
 
@@ -95,13 +123,13 @@ saveBtn.addEventListener('click', async () => {
 
 function setLoading(on, label = 'Save This Job') {
   spinner.style.display = on ? 'block' : 'none';
-  btnText.textContent   = on ? label : 'Save This Job';
+  btnText.textContent   = label;
   saveBtn.disabled      = on;
 }
 
 function showStatus(type, html) {
-  statusEl.className   = `visible ${type}`;
-  statusEl.innerHTML   = html;
+  statusEl.className = `visible ${type}`;
+  statusEl.innerHTML = html;
 }
 
 function clearStatus() {
@@ -116,6 +144,49 @@ function showPreview(extracted) {
   document.getElementById('prev-location').textContent = extracted.location || '—';
   document.getElementById('prev-salary').textContent   = extracted.salary   || '—';
   previewEl.classList.add('visible');
+}
+
+function showSummary(text) {
+  summaryText.textContent = text;
+  summarySection.classList.add('visible');
+}
+
+function showSkills(skillsText) {
+  const skills = skillsText
+    .split(',')
+    .map(s => s.trim())
+    .filter(s => s.length > 0);
+
+  skillsTags.innerHTML = skills
+    .map(s => `<span class="skill-tag">${escapeHtml(s)}</span>`)
+    .join('');
+
+  skillsSection.classList.add('visible');
+}
+
+function showBullets(bulletsText) {
+  const lines = bulletsText
+    .split('\n')
+    .map(l => l.trim())
+    .filter(l => l.length > 0);
+
+  bulletsList.innerHTML = lines.map(line => {
+    // Bold role headers: **Founder**, **Senior Technical Program Manager**, etc.
+    if (line.startsWith('**') && line.endsWith('**')) {
+      const label = escapeHtml(line.slice(2, -2));
+      return `<div class="bullet-role-header">${label}</div>`;
+    }
+    return `<div class="bullet-item">${escapeHtml(line)}</div>`;
+  }).join('');
+
+  bulletsSection.classList.add('visible');
+}
+
+function escapeHtml(str) {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
 }
 
 async function getConfig() {
