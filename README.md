@@ -1,12 +1,12 @@
 # Job Tracker Chrome Extension
 
-A Chrome extension that saves job postings from LinkedIn and Built In to an Airtable tracker — with one click. Uses OpenAI to automatically extract the company name, job title, location, and salary from the posting.
+A Chrome extension that saves job postings from LinkedIn, Built In, Greenhouse, and Ashby to an Airtable tracker — with one click. Uses OpenAI to automatically extract the company name, job title, location, and salary from the posting.
 
 ## Features
 
 - **One-click saving** — click the extension icon on any job page and hit "Save This Job"
 - **AI-powered parsing** — GPT-4o-mini extracts structured fields from unstructured job posting text
-- **Works on LinkedIn and Built In** — handles both sites out of the box
+- **Works on LinkedIn, Built In, Greenhouse, and Ashby** — handles these job boards out of the box
 - **Airtable integration** — creates a new record in your tracker with Company, Job, Link, Salary, and Location pre-filled
 - **Preview before saving** — shows extracted fields in the popup so you can verify before committing
 
@@ -35,7 +35,7 @@ Keys are stored locally in your browser via `chrome.storage.local` — they neve
 
 ### 3. Use it
 
-1. Navigate to a job posting on LinkedIn or Built In
+1. Navigate to a job posting on LinkedIn, Built In, Greenhouse, or Ashby
 2. Click the Job Tracker icon in your toolbar
 3. Click **Save This Job**
 4. The extension reads the page, sends it to OpenAI, and creates an Airtable record
@@ -67,7 +67,7 @@ Fields like Status, Contact, Resume, and Cover Letter are left for you to fill i
 
 PRs welcome! Some ideas for future improvements:
 
-- Support for more job boards (Greenhouse, Lever, Workday, Indeed)
+- Support for more job boards (Lever, Workday, Indeed)
 - Duplicate detection (warn if the job URL already exists in Airtable)
 - Status dropdown in the popup to set application status on save
 - Export to CSV

@@ -61,7 +61,7 @@ saveBtn.addEventListener('click', async () => {
     try {
       pageData = await chrome.tabs.sendMessage(tab.id, { action: 'getJobText' });
     } catch {
-      showStatus('error', "Couldn't read this page. Make sure you're on a LinkedIn or Built In job posting, then refresh and try again.");
+      showStatus('error', "Couldn't read this page. Make sure you're on a supported job posting, then refresh and try again.");
       return;
     }
 
