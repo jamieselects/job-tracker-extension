@@ -2,11 +2,15 @@
   "manifest_version": 3,
   "name": "Job Tracker",
   "version": "1.0.0",
-  "description": "Save job postings from LinkedIn and Built In to Airtable using AI-powered field extraction.",
+  "description": "Save job postings from LinkedIn, Built In, Greenhouse, and Ashby to Airtable using AI-powered field extraction.",
   "permissions": ["activeTab", "storage", "scripting"],
   "host_permissions": [
     "https://www.linkedin.com/*",
     "https://builtin.com/*",
+    "https://*.builtin.com/*",
+    "https://boards.greenhouse.io/*",
+    "https://job-boards.greenhouse.io/*",
+    "https://jobs.ashbyhq.com/*",
     "https://api.openai.com/*",
     "https://api.airtable.com/*"
   ],
@@ -27,7 +31,10 @@
       "matches": [
         "https://www.linkedin.com/jobs/*",
         "https://builtin.com/job/*",
-        "https://*.builtin.com/job/*"
+        "https://*.builtin.com/job/*",
+        "https://boards.greenhouse.io/*",
+        "https://job-boards.greenhouse.io/*",
+        "https://jobs.ashbyhq.com/*"
       ],
       "js": ["content.js"],
       "run_at": "document_idle"

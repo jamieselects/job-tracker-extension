@@ -1,10 +1,20 @@
-// Content script: injected into LinkedIn and Built In job pages.
+// Content script: injected into supported job posting pages.
 // Listens for messages from the popup and returns the page text + URL.
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === 'getJobText') {
-    // Grab the visible text from the page, trimmed of excess whitespace
-    const rawText = document.body.innerText
+    const metaDescription = document
+      .querySelector('meta[name="description"], meta[property="og:description"]')
+      ?.getAttribute('content');
+
+    // Put page metadata first so title/company details survive the text cap.
+    const rawText = [
+      document.title,
+      metaDescription,
+      document.body.innerText
+    ]
+      .filter(Boolean)
+      .join('\n\n')
       .replace(/\n{3,}/g, '\n\n')  // collapse triple+ newlines
       .trim();
 
